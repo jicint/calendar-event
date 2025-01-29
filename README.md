@@ -1,6 +1,28 @@
 # Natural Language Calendar Event Creator
 
-A Laravel + React application that creates Google Calendar events from natural language input. Simply type something like "meeting at 10 am tomorrow at office" and the app will create a calendar event automatically.
+## Features
+- Natural language event creation
+- Voice input support 🎤
+- Calendar conflict detection
+- Google Calendar integration
+- Real-time feedback
+- Mobile-friendly interface
+
+## Usage Examples
+Type or speak phrases like:
+- "meeting with team at 2pm tomorrow"
+- "lunch at 12pm tomorrow at cafeteria"
+
+### Voice Input
+1. Click the 🎤 button
+2. Speak your event details
+3. Click ⏹️ or wait for natural pause
+4. Review and create event
+
+### Conflict Detection
+- Automatically checks for scheduling conflicts
+- Shows overlapping events
+- Option to schedule anyway
 
 ## Prerequisites
 
