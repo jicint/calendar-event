@@ -51,6 +51,16 @@ class CalendarEventController extends Controller
             $this->client->setAccessToken($request->token);
             $service = new Google_Service_Calendar($this->client);
             
+            // Check for conflicts before creating event
+            $conflicts = $this->checkForConflicts($service, $startTime, $endTime);
+            if ($conflicts) {
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'Conflict detected!',
+                    'conflicts' => $conflicts
+                ], 200);
+            }
+
             $event = new Google_Service_Calendar_Event([
                 'summary' => $text, // Use full text as summary
                 'location' => $location,
@@ -83,5 +93,29 @@ class CalendarEventController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    private function checkForConflicts($service, $startTime, $endTime)
+    {
+        $calendarId = 'primary';
+        $optParams = [
+            'timeMin' => $startTime->toRfc3339String(),
+            'timeMax' => $endTime->toRfc3339String(),
+            'singleEvents' => true,
+            'orderBy' => 'startTime',
+        ];
+
+        $events = $service->events->listEvents($calendarId, $optParams);
+        
+        $conflicts = [];
+        foreach ($events->getItems() as $event) {
+            $conflicts[] = [
+                'summary' => $event->getSummary(),
+                'start' => $event->start->dateTime,
+                'end' => $event->end->dateTime
+            ];
+        }
+        
+        return $conflicts;
     }
 } 
